@@ -33,4 +33,27 @@ class TasksTest extends TestCase
         $response->assertJsonFragment(['name' => $task->name]);
 
     }
+
+    public function test_create_task() 
+    {
+        $this->withoutExceptionHandling();
+
+        $admin = User::factory()->create(['is_admin' => true]); 
+
+        $data = [
+            'name' => 'lavarse los dientes',
+            'date' => 2021-03-23,
+            'hour' => '12:00 - 13:00',
+            'repetition_frequency' => 0,
+            'advice' => 'sfhetb',
+            'end_message' => 'sfnbegd',
+        ];
+
+        $response = $this->ActingAs($admin)->postJson('/api/tasks', $data);
+
+        $response->assertStatus(201)->assertJsonFragment(['name' => 'lavarse los dientes']);
+
+        $this->assertDatabaseHas('tasks', $data);
+    }
+
 }

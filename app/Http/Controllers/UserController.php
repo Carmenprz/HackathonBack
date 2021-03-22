@@ -10,6 +10,6 @@ class UserController extends Controller
     public function show(int $id) {
         $user = User::find($id);
         $userTasks = $user->tasks()->get();
-        return json_encode($userTasks);
+        return response()->json($userTasks, 200);
     }
 }
