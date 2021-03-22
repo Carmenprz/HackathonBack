@@ -24,10 +24,10 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::get('/logout', [ApiUserController::class, 'logout']);
+    Route::get('/user/{id}/tasks', [UserController::class, 'show']);
+    Route::apiResource('tasks', TaskController::class);
 });
 
 Route::post('/register', [ApiUserController::class, 'register']);
 Route::post('/login', [ApiUserController::class, 'login']);
 
-Route::middleware('auth')->get('/user/{id}/tasks', [UserController::class, 'show']);
-Route::apiResource('tasks', TaskController::class);
