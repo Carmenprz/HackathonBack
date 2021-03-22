@@ -23,4 +23,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth')->get('/user/{id}/tasks', [UserController::class, 'show']);
 
+Route::middleware('auth')->delete('/user/{user_id}/tasks/{task_id}', [UserController::class, 'destroyTask']);
+
 Route::apiResource('tasks', TaskController::class);

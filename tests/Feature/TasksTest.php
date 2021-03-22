@@ -56,4 +56,23 @@ class TasksTest extends TestCase
         $this->assertDatabaseHas('tasks', $data);
     }
 
+    public function test_delete_a_task() 
+    {
+        $this->withExceptionHandling();
+        $admin = User::factory()->create(['is_admin' => true]); 
+        $user = User::factory()->create(['id' => 2]);
+
+        $task = Task::factory()->create(); 
+        
+        DB::table('task_user')
+        ->insert(['task_id'=>1, 'user_id'=>2]);
+
+        $response = $this->ActingAs($admin)->deleteJson('/api/user/'. $user->id .'/tasks/' . $task->id);
+
+        $response->assertStatus(202)->assertJsonFragment(['message' => 'tarea eliminada correctamente']);
+        $this->assertDatabaseCount('task_user', 0);
+    }
+
+
+
 }
