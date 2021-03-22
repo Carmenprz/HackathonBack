@@ -17,9 +17,10 @@ class Task extends Model
         'advice', 
         'end_message', 
         'is_finished',
+        'user_id',
     ];
 
     public function users() {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class);
     }
 }

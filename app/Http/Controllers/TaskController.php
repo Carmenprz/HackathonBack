@@ -41,7 +41,8 @@ class TaskController extends Controller
             'hour' => $request->hour, 
             'repetition_frequency' => $request->repetition_frequency, 
             'advice' => $request->advice, 
-            'end_message' => $request->end_message
+            'end_message' => $request->end_message,
+            'user_id' => $request->user_id,
         ]);
         
         $task->save();
@@ -78,9 +79,21 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, int $id)
     {
-        //
+        $task = Task::find($id);
+
+        $task->update([
+            'name' => $request->name, 
+            'date' => $request->date, 
+            'hour' => $request->hour, 
+            'repetition_frequency' => $request->repetition_frequency, 
+            'advice' => $request->advice, 
+            'end_message' => $request->end_message,
+            'user_id' => $request->user_id,
+        ]);
+
+        return response()->json($task, 200);
     }
 
     /**
@@ -89,8 +102,15 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(int $id)
     {
-        //
+        $task = Task::find($id);
+
+        $task->delete();
+
+        return response()->json(['message' => 'tarea eliminada correctamente'], 202);
+        
     }
+
+
 }

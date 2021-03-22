@@ -20,18 +20,11 @@ class TasksTest extends TestCase
 
         $user = User::factory()->create(['id' => 2]);
 
-        $task = Task::factory()->create(); 
-        
-        DB::table('task_user')
-        ->insert(['task_id'=>1, 'user_id'=>2]);
+        $task = Task::factory()->create(['user_id' => 2]); 
 
         $response = $this->ActingAs($admin)->getJson('/api/user/'. $user->id .'/tasks');
 
-        $this->assertDatabaseCount('task_user', 1)
-            ->assertDatabaseHas('task_user', ['task_id'=>1, 'user_id'=>2]);
-
-        $response->assertJsonFragment(['name' => $task->name]);
-
+        $response->assertStatus(200)->assertJsonFragment(['name' => $task->name]);
     }
 
     public function test_create_task() 
@@ -39,6 +32,7 @@ class TasksTest extends TestCase
         $this->withoutExceptionHandling();
 
         $admin = User::factory()->create(['is_admin' => true]); 
+        User::factory()->create(['id' => 2]);
 
         $data = [
             'name' => 'lavarse los dientes',
@@ -47,6 +41,7 @@ class TasksTest extends TestCase
             'repetition_frequency' => 0,
             'advice' => 'sfhetb',
             'end_message' => 'sfnbegd',
+            'user_id' => 2,
         ];
 
         $response = $this->ActingAs($admin)->postJson('/api/tasks', $data);
@@ -60,19 +55,36 @@ class TasksTest extends TestCase
     {
         $this->withExceptionHandling();
         $admin = User::factory()->create(['is_admin' => true]); 
-        $user = User::factory()->create(['id' => 2]);
 
         $task = Task::factory()->create(); 
-        
-        DB::table('task_user')
-        ->insert(['task_id'=>1, 'user_id'=>2]);
 
-        $response = $this->ActingAs($admin)->deleteJson('/api/user/'. $user->id .'/tasks/' . $task->id);
+        $response = $this->ActingAs($admin)->deleteJson('/api/tasks/' . $task->id);
 
         $response->assertStatus(202)->assertJsonFragment(['message' => 'tarea eliminada correctamente']);
-        $this->assertDatabaseCount('task_user', 0);
+        $this->assertDatabaseCount('tasks', 0);
     }
 
+    public function test_update_a_task() 
+    {
+        $this->withExceptionHandling();
+        $admin = User::factory()->create(['is_admin' => true]); 
 
+        $task = Task::factory()->create(); 
+        User::factory()->create(['id' => 2]);
+
+        $data = [
+            'name' => 'hacer la cama',
+            'date' => 2021-03-23,
+            'hour' => '12:00 - 13:00',
+            'repetition_frequency' => 0,
+            'advice' => 'sfhetb',
+            'end_message' => 'sfnbegd',
+            'user_id' => 2,
+        ];
+
+        $response = $this->ActingAs($admin)->putJson('/api/tasks/' . $task->id, $data);
+
+        $response->assertStatus(200)->assertJsonFragment(['name' => 'hacer la cama']);
+    }
 
 }

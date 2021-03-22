@@ -27,6 +27,7 @@ class TaskFactory extends Factory
             'date' => $this->faker->date,
             'advice' => $this->faker->text,
             'end_message' => $this->faker->text,
+            'user_id' => $this->faker->numberBetween(1, 5),
         ];
     }
 }

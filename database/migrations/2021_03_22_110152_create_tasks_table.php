@@ -22,6 +22,7 @@ class CreateTasksTable extends Migration
             $table->string('advice')->nullable();
             $table->string('end_message');
             $table->boolean('is_finished')->default(false);
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }

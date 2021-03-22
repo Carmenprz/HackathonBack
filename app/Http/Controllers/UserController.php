@@ -14,14 +14,5 @@ class UserController extends Controller
         return response()->json($userTasks, 200);
     }
 
-    public function destroyTask(int $user_id, int $task_id) 
-    {
 
-        DB::table('task_user')
-            ->where('user_id', $user_id)
-            ->where('task_id', $task_id)
-            ->delete();
-
-        return response()->json(['message' => 'tarea eliminada correctamente'], 202);
-    }
 }
