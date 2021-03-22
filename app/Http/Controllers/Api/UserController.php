@@ -51,5 +51,15 @@ class UserController extends Controller
 
     }
 
+    public function logout()
+    {
+        $user = Auth::user();
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'User disconnected'
+        ], 200);
+    }
+
 
 }

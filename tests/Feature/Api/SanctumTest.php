@@ -43,4 +43,13 @@ class SanctumTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_user_can_logout()
+    {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->getJson('/api/logout');
+
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'User disconnected']);
+    }
 }
