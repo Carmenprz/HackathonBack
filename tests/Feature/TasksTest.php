@@ -19,15 +19,18 @@ class TasksTest extends TestCase
         $admin = User::factory()->create(['is_admin' => true]);
 
         $user = User::factory()->create(['id' => 2]);
-        
-        Task::factory()->create(); 
+
+        $task = Task::factory()->create(); 
         
         DB::table('task_user')
         ->insert(['task_id'=>1, 'user_id'=>2]);
 
-        $this->ActingAs($admin)->getJson('/api/user/'. $user->id .'/tasks');
+        $response = $this->ActingAs($admin)->getJson('/api/user/'. $user->id .'/tasks');
 
         $this->assertDatabaseCount('task_user', 1)
             ->assertDatabaseHas('task_user', ['task_id'=>1, 'user_id'=>2]);
+
+        $response->assertJsonFragment(['name' => $task->name]);
+
     }
 }
