@@ -18,8 +18,8 @@ class CreateTasksTable extends Migration
             $table->string('name');
             $table->string('hour');
             $table->date('date');
-            $table->integer('repetition_frequency');
-            $table->string('advice');
+            $table->integer('repetition_frequency')->default(0);
+            $table->string('advice')->nullable();
             $table->string('end_message');
             $table->boolean('is_finished')->default(false);
             $table->timestamps();
