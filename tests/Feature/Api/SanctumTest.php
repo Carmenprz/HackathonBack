@@ -18,30 +18,21 @@ class SanctumTest extends TestCase
      */
     public function test_user_can_register()
     {
+        $user = User::factory()->create(['is_admin' => 1]);
+
         $data = [
             'name' => 'Giacomo',
-            'email' => 'root@root.com',
+            'email' => 'root1@root.com',
             'password' => Hash::make('password'),
         ];
 
-        $response = $this->postJson('/api/register', $data);
+        $response = $this->actingAs($user)->postJson('/api/register', $data);
 
-        $this->assertDatabaseCount('users', 1)
-            ->assertDatabaseHas('users', ['name' => 'Giacomo', 'email' => 'root@root.com']);
+        $this->assertDatabaseCount('users', 2)
+            ->assertDatabaseHas('users', ['name' => 'Giacomo', 'email' => 'root1@root.com']);
 
         $response->assertJson(['token_type' => 'Bearer'])
             ->assertStatus(201);
-    }
-
-    public function test_user_can_login()
-    {
-        $user = User::factory()->create([
-            'password' => Hash::make('password')
-        ]);
-
-        $response = $this->postJson('api/login', ['email' => $user->email, 'password' => $user->password]);
-
-        $response->assertStatus(200);
     }
 
     public function test_user_can_logout()
